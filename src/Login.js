@@ -1,4 +1,4 @@
-import { Heading, VStack, Input, Button } from '@chakra-ui/react';
+import { Heading, VStack, Input, Box, Button, Flex } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import supabase from './supabase';
@@ -43,35 +43,32 @@ export default function Login() {
         p="5"
         fontWeight="extrabold"
         size="xl"
-        bgGradient="linear(to-l, teal.300, blue.500)"
+        bgGradient="linear(to-t, teal.300, blue.500)"
         bgClip="text"
       >
         Login
       </Heading>
 
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="exampleInputEmail1" className="form-label">
-            Email address
-          </label>
+        <Flex flexDir="column" w="50vw">
           <Input
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             name="email"
+            placeholder="Email address"
             required
+            mb="1rem"
           />
-          <div className="form-text">
+
+          <Box as="span" mb="1rem">
             Enter your email to get your magic link
-          </div>
-        </div>
-        <Button
-          disabled={loading}
-          type="submit"
-          className="btn btn-primary btn-lg w-100 "
-        >
-          {loading ? 'Loading...' : 'Submit'}
-        </Button>
+          </Box>
+
+          <Button colorScheme="blue" disabled={loading} type="submit">
+            {loading ? 'Loading...' : 'Submit'}
+          </Button>
+        </Flex>
       </form>
     </VStack>
   );

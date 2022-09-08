@@ -39,7 +39,14 @@ export default function Home() {
   }, []);
   return (
     <VStack p={4} minH="100vh">
-      <Button onClick={() => onLogout()}>Logout</Button>
+      <Button
+        colorScheme="blue"
+        variant="outline"
+        ml="auto"
+        onClick={() => onLogout()}
+      >
+        Logout
+      </Button>
       <Heading
         mt="20"
         p="5"

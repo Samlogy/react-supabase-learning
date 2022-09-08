@@ -1,7 +1,4 @@
 import {
-  Box,
-  Image,
-  Skeleton,
   StackDivider,
   Table,
   TableContainer,
@@ -12,32 +9,22 @@ import {
   Tr,
   VStack,
 } from '@chakra-ui/react';
-import { useRealtime } from 'react-supabase';
+import { useEffect, useState } from 'react';
 
-import img from '../images/empty.svg';
+import supabase from '../supabase';
 import ClearTasks from './ClearTasks';
 import DeleteTask from './DeleteTask';
 
 export default function TaskList() {
-  const [result, reexecute] = useRealtime('task');
-  const { data, error, fetching } = result;
+  const [tasks, setTasks] = useState([]);
 
-  if (fetching) {
-    return (
-      <Skeleton
-        width={{ base: '90vw', sm: '80vw', lg: '50vw', xl: '30vw' }}
-        height="300px"
-        rounded="md"
-      />
-    );
-  }
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
-  if (!data || !data.length) {
-    return (
-      <Box align="center">
-        <Image src={img} mt="30px" maxW="95%" />
-      </Box>
-    );
+  async function fetchTasks() {
+    const { data, error } = await supabase.from('task').select();
+    setTasks(data);
   }
 
   return (
@@ -64,17 +51,18 @@ export default function TaskList() {
             </Thead>
 
             <Tbody>
-              {data.map((task, idx) => (
-                <Tr key={idx}>
-                  <Td>{task.id}</Td>
-                  <Td>{task.item}</Td>
-                  <Td>{task.done}</Td>
-                  <Td>{task.created_at}</Td>
-                  <Td>
-                    <DeleteTask id={task.id} />
-                  </Td>
-                </Tr>
-              ))}
+              {tasks.length > 0 &&
+                tasks.map((task, idx) => (
+                  <Tr key={idx}>
+                    <Td>{task.id}</Td>
+                    <Td>{task.item}</Td>
+                    <Td>{task.done}</Td>
+                    <Td>{task.created_at}</Td>
+                    <Td>
+                      <DeleteTask id={task.id} />
+                    </Td>
+                  </Tr>
+                ))}
             </Tbody>
           </Table>
         </TableContainer>

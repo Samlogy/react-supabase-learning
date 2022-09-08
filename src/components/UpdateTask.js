@@ -3,8 +3,8 @@ import { useState } from 'react';
 
 import supabase from '../supabase';
 
-export default function AddTask() {
-  const [text, setText] = useState('');
+export default function UpdateTask({ data, id }) {
+  const [text, setText] = useState(data.item);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
@@ -13,7 +13,8 @@ export default function AddTask() {
 
     const { data, error } = await supabase
       .from('task')
-      .insert([{ item: text, done: false }]);
+      .update({ ...data })
+      .match({ id: id });
 
     setLoading(false);
     setText('');
@@ -38,7 +39,7 @@ export default function AddTask() {
           isLoading={loading}
           loadingText="Adding"
         >
-          Add
+          Edit
         </Button>
       </HStack>
     </form>
